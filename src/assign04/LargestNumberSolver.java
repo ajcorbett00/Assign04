@@ -19,6 +19,12 @@ public class LargestNumberSolver {
     }
 
     public static BigInteger findLargestNumber(Integer[] arr) {
+        if(arr.length == 0){
+            return new BigInteger("0");
+        }
+        if(arr.length == 1){
+            return new BigInteger("" + arr[0]);
+        }
         Comparator<Integer> cmp = new Comparator<Integer>() {
             @Override
             public int compare(Integer x, Integer y) {
@@ -44,6 +50,12 @@ public class LargestNumberSolver {
     }
 
     public static int findLargestInt(Integer[] arr) throws OutOfRangeException {
+        if(arr.length == 0){
+            return 0;
+        }
+        if(arr.length == 1){
+            return arr[0];
+        }
         var max_val = Integer.MAX_VALUE;
         var max = new BigInteger("" + max_val);
         Comparator<Integer> cmp = new Comparator<Integer>() {
@@ -78,6 +90,12 @@ public class LargestNumberSolver {
     }
 
     public static long findLargestLong(Integer[] arr) throws OutOfRangeException {
+        if(arr.length == 0){
+            return 0;
+        }
+        if(arr.length == 1){
+            return arr[0];
+        }
         var max_val = Long.MAX_VALUE;
         var max = new BigInteger("" + max_val);
         Comparator<Integer> cmp = new Comparator<Integer>() {
@@ -114,7 +132,7 @@ public class LargestNumberSolver {
     public static BigInteger sum(List<Integer[]> list) {
         BigInteger sum = new BigInteger("0");
         for (Integer[] subList : list) {
-            sum.add(findLargestNumber(subList));
+            sum = sum.add(findLargestNumber(subList));
         }
         return sum;
     }
@@ -149,6 +167,8 @@ public class LargestNumberSolver {
             list.set(j,val);
         }
     }
+
+
 
 
 
