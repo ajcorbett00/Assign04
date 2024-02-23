@@ -1,4 +1,4 @@
-package lab02;
+package assign04;
 
 
 /**
@@ -88,11 +88,13 @@ abstract public class TimerTemplate {
      * `final` means you cannot override this in a child class
      * @return Array of timing results
      */
-    public final Result[] run(){
+    protected final Result[] run(){
         var ret = new Result[problemSizes.length];
         for(int i = 0; i < problemSizes.length; i++){
             ret[i] = timeIt(problemSizes[i]);
+
         }
+
         return ret;
     }
 

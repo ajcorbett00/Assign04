@@ -1,12 +1,11 @@
 package assign04;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.*;
 import java.math.*;
 import java.util.*;
-
 public class LargestNumberSolver {
-
-
     public static <T> void insertionSort(T[] arr, Comparator<? super T> cmp) {
         for (int i = 1; i < arr.length; i++) {
             T val = arr[i];
@@ -19,29 +18,15 @@ public class LargestNumberSolver {
     }
 
     public static BigInteger findLargestNumber(Integer[] arr) {
-        if(arr.length == 0){
+        if (arr.length == 0) {
             return new BigInteger("0");
         }
-        if(arr.length == 1){
+        if (arr.length == 1) {
             return new BigInteger("" + arr[0]);
         }
-        Comparator<Integer> cmp = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer x, Integer y) {
-                String forward = x.toString() + y.toString();
-                String reverse = y.toString() + x.toString();
-                BigInteger front = new BigInteger(forward);
-                BigInteger back = new BigInteger(reverse);
-                if (front.compareTo(back) > 0) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }
-        };
         Integer[] arrayToSort = new Integer[arr.length];
         System.arraycopy(arr, 0, arrayToSort, 0, arr.length);
-        insertionSort(arrayToSort, cmp);
+        insertionSort(arrayToSort, new CompareByString());
         var numberAsString = new StringBuilder();
         for (Integer x : arrayToSort) {
             numberAsString.append(x);
@@ -50,34 +35,17 @@ public class LargestNumberSolver {
     }
 
     public static int findLargestInt(Integer[] arr) throws OutOfRangeException {
-        if(arr.length == 0){
+        if (arr.length == 0) {
             return 0;
         }
-        if(arr.length == 1){
+        if (arr.length == 1) {
             return arr[0];
         }
         var max_val = Integer.MAX_VALUE;
         var max = new BigInteger("" + max_val);
-        Comparator<Integer> cmp = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer x, Integer y) {
-                String forward = x.toString() + y.toString();
-                String reverse = y.toString() + x.toString();
-                var front = new BigInteger(forward);
-                var back = new BigInteger(reverse);
-                if (front.compareTo(max) >= 0 || back.compareTo(max) >= 0) {
-                    throw new OutOfRangeException("int");
-                }
-                if (front.compareTo(back) > 0) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }
-        };
         Integer[] arrayToSort = new Integer[arr.length];
         System.arraycopy(arr, 0, arrayToSort, 0, arr.length);
-        insertionSort(arrayToSort, cmp);
+        insertionSort(arrayToSort, new CompareByString());
         var numberAsString = new StringBuilder();
         for (Integer x : arrayToSort) {
             numberAsString.append(x);
@@ -90,34 +58,17 @@ public class LargestNumberSolver {
     }
 
     public static long findLargestLong(Integer[] arr) throws OutOfRangeException {
-        if(arr.length == 0){
+        if (arr.length == 0) {
             return 0;
         }
-        if(arr.length == 1){
+        if (arr.length == 1) {
             return arr[0];
         }
         var max_val = Long.MAX_VALUE;
         var max = new BigInteger("" + max_val);
-        Comparator<Integer> cmp = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer x, Integer y) {
-                String forward = x.toString() + y.toString();
-                String reverse = y.toString() + x.toString();
-                var front = new BigInteger(forward);
-                var back = new BigInteger(reverse);
-                if (front.compareTo(max) >= 0 || back.compareTo(max) >= 0) {
-                    throw new OutOfRangeException("long");
-                }
-                if (front.compareTo(back) > 0) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }
-        };
         Integer[] arrayToSort = new Integer[arr.length];
         System.arraycopy(arr, 0, arrayToSort, 0, arr.length);
-        insertionSort(arrayToSort, cmp);
+        insertionSort(arrayToSort, new CompareByString());
         var numberAsString = new StringBuilder();
         for (Integer x : arrayToSort) {
             numberAsString.append(x);
@@ -138,39 +89,65 @@ public class LargestNumberSolver {
     }
 
     public static Integer[] findKthLargest(List<Integer[]> list, int k) throws IllegalArgumentException {
-        if(k >= list.size()){throw new IllegalArgumentException("The value of k that you provided is out of bounds of the " +
-                    "List that you provided");}
-        Comparator<Integer[]> cmp = new Comparator<Integer[]>(){
-            @Override
-           public int compare(Integer[] lhs, Integer[] rhs){
-                BigInteger left = LargestNumberSolver.findLargestNumber(lhs);
-                return (-1)*left.compareTo(LargestNumberSolver.findLargestNumber(rhs));
-            }
-        };
-        insertionSortForKthLargest(list,cmp);
-        return list.get(k);
+        if (k >= list.size()) {
+            throw new IllegalArgumentException("The value of k that you provided is out of bounds of the " +
+                    "List that you provided");
+        }
+        Integer[][] copy = list.toArray(new Integer[list.size()][]);
+
+        //insertionSort(copy, new CompareByArr());
+        Arrays.sort(copy,new CompareByArr());
+        return copy[k];
+
     }
 
-    public static List<Integer[]> readFile(String fileName){
-        return new ArrayList<>();
+    public static List<Integer[]> readFile(String fileName) {
+
+        var intList = new ArrayList<Integer[]>();
+        try {
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] numbersAsString = line.trim().split("\\s+");
+                var arr = new Integer[numbersAsString.length];
+                for (int i = 0; i < numbersAsString.length; i++) {
+                    arr[i] = Integer.parseInt(numbersAsString[i]);
+                }
+                intList.add(arr);
+            }
+        } catch (FileNotFoundException ignored) {}
+        return intList;
+    }
+}
+
+    class CompareByString implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            String s1 = o1.toString();
+            String s2 = o2.toString();
+
+            String left = s1 + s2;
+            String right = s2 + s1;
+
+            return right.compareTo(left);
+        }
     }
 
-    //-----Private Helper Methods----
+    class CompareByArr implements Comparator<Integer[]> {
 
-    private static void insertionSortForKthLargest(List<Integer[]> list, Comparator<Integer[]> cmp) {
-        for (int i = 1; i < list.size(); i++) {
-            var val = list.get(i);
-            int j;
-            for (j = i; (j > 0) && (cmp.compare(val, list.get(j - 1)) < 0); j--) {
-                list.set(j,list.get(j-1));
-            }
-            list.set(j,val);
+        @Override
+        public int compare(Integer[] o1, Integer[] o2) {
+            BigInteger s1 = LargestNumberSolver.findLargestNumber(o1);
+            BigInteger s2 = LargestNumberSolver.findLargestNumber(o2);
+
+            return s2.compareTo(s1);
         }
     }
 
 
 
-
-
     
-}
+

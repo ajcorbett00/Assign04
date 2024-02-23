@@ -1,14 +1,17 @@
 package assign04;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static assign04.LargestNumberSolver.readFile;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ *
+ */
 public class LargestNumberSolverTester {
 
     private Integer[] mediumIntArray;
@@ -23,7 +26,7 @@ public class LargestNumberSolverTester {
     @BeforeEach
     public void setup(){
     mediumIntArray = new Integer[]{9,5,6,7,8};
-    multiDigitArray = new Integer[]{99, 5, 100};
+    multiDigitArray = new Integer[]{99, 100,5};
     smallIntList.add(mediumIntArray);
     smallIntList.add(multiDigitArray);
     biggerIntList.add(new Integer[]{1,2,3});
@@ -157,6 +160,7 @@ public class LargestNumberSolverTester {
         assertEquals(0,sum.compareTo(LargestNumberSolver.sum(smallIntList)));
     }
 
+
     @Test
     public void findKthLargestFunctionality(){
         assertEquals(multiDigitArray, LargestNumberSolver.findKthLargest(smallIntList,0));
@@ -165,62 +169,29 @@ public class LargestNumberSolverTester {
         assertEquals(99,returned[0]);
     }
 
+    @Test
+    public void findKthLargestThrows(){
+        IllegalArgumentException testException =
+                assertThrows(IllegalArgumentException.class, () ->
+                        LargestNumberSolver.findKthLargest(smallIntList,smallIntList.size()));
+        assertEquals("The value of k that you provided is out of bounds of the " +
+                "List that you provided", testException.getMessage());
+    }
 
 
-
-
-
-
+    //---readFile Tests---
+    @Test
+    public void fileReaderFoundFile(){
+       var arr = readFile("\\Users\\HP\\Documents\\College Spring 24'\\CS 2420\\Assingments\\assignment04\\src\\assign04\\integers.txt");
+        assertEquals(Arrays.toString(arr.get(7)), Arrays.toString(new Integer[]{88,51}));
+        assertEquals(Arrays.toString(arr.get(902)), Arrays.toString(new Integer[]{85,35,34,52,14,92,9,79,82,83}));
+    }
 
     @Test
-    public void findLargestNumber(){
-BigInteger largest;
-Integer[] list = new Integer[3];
-list[0] = 11;
-list[1] = 2;
-list[2] = 100;
-largest = LargestNumberSolver.findLargestNumber(list);
-assertEquals(largest,new BigInteger("211100"));
-list[0] = 1;
-list[1] = 45;
-list[2] = 9;
-largest = LargestNumberSolver.findLargestNumber(list);
-assertEquals(largest,new BigInteger("9451"));
-
-
-
-
-    }
-    @Test
-    public void findLargestIntTest(){
-
-    }
-    @Test
-    public void findLargestLong(){
-
-    }
-    @Test
-    public void sum(){
-
-    }
-    @Test public void findKthLargest(){
-        ArrayList<Integer[]> mainList = new ArrayList<Integer[]>();
-        Integer[] subList1 = new Integer[3];
-        subList1[0] = 11;
-        subList1[1] = 2;
-        subList1[2] = 100;
-        Integer[] subList2 = new Integer[3];
-        subList2[0] = 1;
-        subList2[1] = 45;
-        subList2[2] = 9;
-
-        mainList.add(subList1);
-        mainList.add(subList2);
-        assertEquals(LargestNumberSolver.findKthLargest(mainList,0),subList1);
-        assertEquals(LargestNumberSolver.findKthLargest(mainList,1),subList2);
-        //assertThrows() check to see if throws Illegal Argument
-
-
+    public void fileReaderFileNotFound(){
+        var arr = new ArrayList<Integer[]>();
+        var check = LargestNumberSolver.readFile("doesNotExist");
+        assertEquals(arr, check);
     }
 
 
