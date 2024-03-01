@@ -46,8 +46,7 @@ public interface Stack<E> {
 	 */
 	public void push(E element); 
 	
-	/**
-	 * @return the number of elements in the stack
-	 */
+
+
 	public int size();
 }

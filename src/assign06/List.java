@@ -30,7 +30,7 @@ public interface List<E> extends Iterable<E> {
 	 * @throws IndexOutOfBoundsException if index is out of range (index < 0 || index > size())
 	 */
 	public void insert(int index, E element) throws IndexOutOfBoundsException;
-	
+
 	/**
 	 * Gets the first element in the list.
 	 * O(1) for a singly-linked list.
